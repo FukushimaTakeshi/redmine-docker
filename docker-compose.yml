@@ -1,0 +1,41 @@
+﻿version: '2'
+
+services:
+  mysql:
+    image: 'sameersbn/mysql:latest'
+    environment:
+      - DB_USER=bitnami
+      - DB_PASS=passward
+      - DB_NAME=bitnami_redmine
+    volumes:
+      - /srv/docker/redmine/mysql:/var/lib/mysql
+  redmine:
+    image: 'sameersbn/redmine:latest'
+    depends_on:
+      - mysql
+    ports:
+      - "10083:80"
+    volumes:
+      - /srv/docker/redmine/redmine:/home/redmine/data
+    environment:
+      - TZ=Asia/Tokyo
+      - DB_ADAPTER=mysql2
+      - DB_HOST=mysql
+      - DB_PORT=3306
+
+      - DB_USER=bitnami
+      - DB_PASS=passward
+      - DB_NAME=bitnami_redmine
+
+      - REDMINE_PORT=10083
+      - REDMINE_HTTPS=false
+      - REDMINE_CONCURRENT_UPLOADS=2
+
+      - REDMINE_RELATIVE_URL_ROOT=/redmine
+      - REDMINE_SECRET_TOKEN=
+      - REDMINE_SUDO_MODE_ENABLED=false
+      - REDMINE_SUDO_MODE_TIMEOUT=15
+
+      - REDMINE_BACKUP_SCHEDULE=weekly
+      - REDMINE_BACKUP_EXPIRY=
+      - REDMINE_BACKUP_TIME=
